@@ -1,0 +1,105 @@
+@import './colors';
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Comment form style */
+
+[contenteditable="true"]:focus {
+  border: none;
+  outline: none;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  margin: 2% 0;
+  width: inherit;
+}
+
+.textInput {
+  padding: 5px;
+  &:nth-child(3) {
+    margin-bottom: 1rem;
+  }
+}
+
+.textInput.short {
+  border-radius: 3px;
+  padding: 0.9rem;
+  border: 1px solid $lightGreyDarked;
+  // border: 1px solid $mediumGrey;
+  margin-bottom: 1.2rem;
+  &:focus{
+    outline:none;
+  }
+ 
+}
+
+.areaInput {
+  height: 200px;
+}
+
+.formLabel {
+  width: inherit;
+  text-align: left;
+  margin: 8px 0;
+}
+
+.formSelect {
+  height: 2rem;
+}
+
+.buttonGroup {
+  display: flex;
+  margin: 5%;
+  justify-content: center;
+
+  .button {
+    margin: 10px;
+  }
+}
+
+#form_add_comments {
+  width: 100%;
+  margin: 2% auto;
+  
+  .comments-placeholder-wrapper {
+    position: relative;
+    margin: 2% 0;
+
+    .comments-placeholder {
+      position: absolute;
+      color: lightslategray;
+      top: 8px;
+      left: 10px;
+      padding: 2% 0;
+    }
+  }
+  .input-comment-wrapper {
+    padding: 8px;
+    border: 1px solid grey;
+
+    .input-comment {
+      text-align: left;
+    }
+  }
+}
+
+.comments-placeholder-wrapper.display-none {
+  display: none;
+}
+
+//Desktop and larger screens
+@media screen and (min-width: 960px){
+  // .form {
+  //   width: 60%;
+  //   margin: 0 auto;
+  // }
+
+  .inputGroup {
+    width: 100%;
+  }
+}

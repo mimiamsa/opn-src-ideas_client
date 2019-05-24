@@ -1,0 +1,293 @@
+.titleContainer {
+  margin-top: 50px;
+
+  .mainTitle{
+    font-family: "Self Modern Text";
+    color: $lightBlack;
+    font-size: 4.5rem;
+    line-height: 5.25rem;
+  }
+
+  .mainTagline {
+    font-family: "Plain";
+    color: $ultraViolet;
+    font-weight: 500;
+    font-size: 1rem;
+    margin-bottom: -0.5rem;
+  }
+}
+
+.ideaListContainer.home{
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1100px;
+  margin: 25px auto 0;
+  text-align:center;
+
+  .publicItem{
+    width: calc(50% - 0.75rem);
+    height: 210px;
+    background: #f3f4f5;
+    border-radius: 0.3rem;
+    margin-bottom: 1.5rem;
+    padding: 1.25rem 0 1.25rem 1.25rem;
+    border: 0;
+    border-bottom: 0.15rem solid rgba(0,0,0,0.2);
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0;
+    transition: all 600ms ease-out;
+    transform: translate3d(0,25px,0) scale(0.95);
+  
+    .publicItemTitle{
+      font-family: "Self Modern";
+      font-weight: normal;
+      font-size: 1.7rem;
+      line-height: 2rem;
+      margin-top: 0.3rem;
+    }
+
+    .publicItemInfos{
+      height: 100%;
+      width: 80%;
+      text-align: left;
+      border-right: 1px solid $mediumGrey;
+      padding-right: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .publicItemCat{
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        color: $mediumGrey;
+        user-select: none;
+
+        .publicItemCatName{
+          color: $ultraViolet;
+        }
+      } 
+      .publicItemDescription{
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+      }
+      .publicItemInfosSecondary{
+        display:flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        color: $mediumGrey;
+
+        .publicItemInfosSecondaryRight{
+          display: flex;
+          align-items: center;
+
+          .publicItemCommentIcon{
+            margin-top: 1px;
+          }
+
+          .publicItemCommentsCount{
+            margin-left: 0.25rem;
+          }
+          .publicItemDate{
+            margin-left:0.75rem;
+          }
+        }
+      }
+    }
+    .publicItemUpvote{
+      width: 20%;
+      margin: 0 auto;
+    }
+  }
+  .publicItem.visible {
+    opacity: 1;
+    transform: translate3d(0,0,0);
+  }
+
+  .publicItem:nth-child(even){
+    margin-left: 0.75rem;
+    transition-delay: 200ms;
+  }
+
+  .publicItem:nth-child(odd){
+    margin-right: 0.75rem;
+  }
+}
+
+
+.sortOptions{
+  max-width: 1100px;
+  margin: 2rem auto 0;
+  text-align:left;
+  color: $ultraViolet;
+  font-size: 0.8rem;
+  font-weight: 500;
+
+  .sortOptionsDropdown{
+    font-size: 0.8rem;
+    height: 1.85rem;
+    margin-left: 0.3rem;
+  }
+}
+
+.trendingIdeasContainer{
+  max-width: 900px;
+  margin: 0 auto;
+
+  .trendingItemWrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+
+    .trendingItem{
+      width: 30%;
+      padding: 10px 0;
+
+      .trendingItemTitle{
+        font-family: 'Self Modern Trial';
+        font-weight: 500;
+        font-size: 1.3rem;
+        margin-bottom: 0.25rem;
+        padding: 0 0.5rem;
+        transition: all 500ms ease;
+        
+        &:hover{
+          color: $ultraViolet;
+        }
+      }
+
+      .trendingTitleIcon{
+        color: $ultraViolet;
+      }
+      // .trendingItemUpvotes{
+      //   color: $lightBlack;
+      //   font-size: 0.8rem;
+      // }
+      .trendingItemCreator{
+        font-size: 0.75rem;
+        color: $mediumGrey;
+      }
+    }
+  }
+
+  .trendingTitleContainer{
+    display: flex;
+    color: $ultraViolet;
+    align-items: center;
+
+    .trendingIdeasTitle{
+      font-weight: 500;
+      margin-left: 0.35rem;
+    }
+  }
+}
+
+
+
+//--------------------------------RESPONSIVE--------------------------------
+
+//Mobile
+@media screen and (max-width: 479px){
+.titleContainer{
+  .mainTitle{
+    font-size: 2.25rem;
+    line-height: 2.6rem;
+  }
+  .mainTagline{
+    margin-bottom: 0;
+  }
+}
+.ideaListContainer.home{
+  .publicItem {
+    width: 100%;
+    .publicItemInfos{
+      width: 70%;
+      border-right: none;
+
+      .publicItemTitle{
+        font-size: 1.1rem;
+        line-height: 1.3rem;
+      }
+      .publicItemDescription{
+        font-size: 0.7rem;
+      }
+      .publicItemInfosSecondary{
+        flex-direction: column;
+        align-items: start; 
+        font-size: 0.7rem;
+      }
+    }
+  }
+  .publicItem:nth-child(even){
+    margin-left: 0;
+  }
+
+  .publicItem:nth-child(odd){
+    margin-right: 0;
+  }
+}
+}
+
+//Phablet
+@media screen and (min-width: 480px) and (max-width: 767px){
+  .titleContainer{
+    .mainTitle{
+      font-size: 2.75rem;
+      line-height: 3.2rem;
+    }
+    .mainTagline{
+      margin-bottom: 0;
+    }
+  }
+
+  .ideaListContainer.home{
+    .publicItem {
+      width: 100%;
+    }
+    .publicItem:nth-child(even){
+      margin-left: 0;
+    }
+    .publicItem:nth-child(odd){
+      margin-right: 0;
+    }
+  }
+}
+
+//Tablets
+@media screen and (min-width: 768px) and (max-width: 959px){
+  .titleContainer{
+    .mainTitle{
+      font-size: 4.25rem;
+      line-height: 5rem;
+    }
+  }
+  .ideaListContainer.home{
+    .publicItem {
+      .publicItemInfos{
+        border-right: none;
+        width: 70%;
+
+        .publicItemTitle{
+          font-size: 1.3rem;
+          line-height: 1.5rem;
+        }
+        .publicItemDescription{
+          font-size: 0.8rem;
+        }
+        .publicItemInfosSecondary{
+          flex-direction: column;
+          align-items: start;
+          font-size: 0.7rem;
+        }
+      }
+    }
+  }
+}
+
+//Desktop and larger screens
+@media screen and (min-width: 960px){
+  
+}

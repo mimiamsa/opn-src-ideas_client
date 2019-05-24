@@ -1,0 +1,128 @@
+.ideaPageContainer {
+  max-width: 700px;
+  margin: 1.4rem auto 0; 
+}
+
+.ideaTitleInfos{
+  .ideaPageCat{
+    color: $mediumGrey;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+  }
+  .ideaPageCatName{
+    color: $ultraViolet;
+  }
+  .ideaMainTitle{
+    font: 3.5rem "Self Modern";
+    line-height: 4rem;
+    max-width: 500px;
+    margin: 1rem auto ;
+  }
+  .ideaCreatorInfos{
+    display: flex;
+    justify-content: center;
+    color: $mediumGrey;
+    font-size: 0.85rem;
+    margin: 1rem auto 3rem;
+
+    .ideaPageDate{
+      margin-left: 0.25rem;
+    }
+    .ideaPageCreator{
+      margin-right: 0.25rem;
+    }
+  }
+}
+
+.ideaInfos{
+  display: flex;
+  flex-direction: column;
+
+  .ideaPageDescription {
+    color: $lightBlack;
+    font-size: 1rem;
+    font-weight: 300;
+    margin: 2rem auto 1rem;
+    text-align: justify;
+  }
+
+  .ideaTags {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 1rem 0;
+
+    .tagItem {
+      margin: 0 1rem 0 0;
+      text-transform: uppercase;
+      font-size: 1rem;
+      color: $ultraViolet;
+    }
+  }
+}
+
+.postedComment {
+  width: 100%;
+  background: #f3f4f5;
+  border-radius: 0.3rem;
+  margin-bottom: 0.5rem;
+  padding: 1rem 0 1rem 1rem;
+  border: 0;
+  border-bottom: 0.15rem solid rgba(0,0,0,0.2);
+  display:flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.comments {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ideaSecHeading {
+  color : $lightBlack;
+  font-size: 1rem;
+  margin: 0.5rem 0;
+}
+
+.itemCreator {
+  display:flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1rem;
+  color: $ultraViolet;
+}
+
+.commentText {
+  font-size: 1rem;
+  color: $lightBlack;
+  margin: 1rem 0;
+}
+
+.commentDate {
+  font-size: 0.8rem;
+  color: $mediumGrey;
+}
+
+.input-comment {
+  height: 100px;
+  margin: 1rem 0;
+  padding: 1rem 0 1rem 1rem;
+  color: black;
+  font-size: 1rem;
+  font-weight: 300;
+}
+
+#form_add_comments {
+  display: flex;
+  flex-direction: column;
+}
+
+@media screen and (min-width: 960px){
+.ideaPageContainer {
+  width: 70%;
+  margin: 0 auto;
+}
+}
