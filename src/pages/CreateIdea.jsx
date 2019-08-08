@@ -18,6 +18,7 @@ class CreateIdea extends Component {
   }
 
   render() {
+  
   return (
     <div className="creat-idea-page">
       <div className="create-Heading">

@@ -5,20 +5,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Signup from "../pages/Signup"
 
 class UpvoteDownvote extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
-      loggedUser: props.loggedUser,
+      // loggedUser: props.loggedUser,
       idea: props.idea,
-			upvotes: props.idea.upvotes,
-			downvotes: props.idea.downvotes,
+      upvotes: props.idea.upvotes,
+      downvotes: props.idea.downvotes,
       hasUpvoted: false,
       hasDownvoted: false,
       upvotedUsers: props.idea.upvotedUsers,
       downvotedUsers: props.idea.downvotedUsers,
-      showModal : false,
+      showModal: false,
     }
-		// console.log("props: ", props)
+    console.log("props upvote test: ", props)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -26,21 +26,21 @@ class UpvoteDownvote extends Component {
       this.setState({
         idea: this.props.idea,
         upvotes: this.props.idea.upvotes,
-			  downvotes: this.props.idea.downvotes,
+        downvotes: this.props.idea.downvotes,
         upvotedUsers: this.props.idea.upvotedUsers,
         downvotedUsers: this.props.idea.downvotedUsers,
         hasUpvoted: (this.props.loggedUser && this.checkIfAlreadyUpvoted(this.props.loggedUser._id, this.props.idea)),
-			  hasDownvoted: (this.props.loggedUser && this.checkIfAlreadyDownvoted(this.props.loggedUser._id, this.props.idea))
+        hasDownvoted: (this.props.loggedUser && this.checkIfAlreadyDownvoted(this.props.loggedUser._id, this.props.idea))
       })
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.setState({
-			hasUpvoted: (this.props.loggedUser && this.checkIfAlreadyUpvoted(this.props.loggedUser._id, this.props.idea)),
-			hasDownvoted: (this.props.loggedUser && this.checkIfAlreadyDownvoted(this.props.loggedUser._id, this.props.idea))
-		});
-  }  
+      hasUpvoted: (this.props.loggedUser && this.checkIfAlreadyUpvoted(this.props.loggedUser._id, this.props.idea)),
+      hasDownvoted: (this.props.loggedUser && this.checkIfAlreadyDownvoted(this.props.loggedUser._id, this.props.idea))
+    });
+  }
 
   checkIfAlreadyUpvoted = (userId, idea) => {
     var upvotedUsers = idea.upvotedUsers
@@ -56,96 +56,108 @@ class UpvoteDownvote extends Component {
 
   upvoteOne = () => {
     upvoteIdea(this.props.idea._id, this.state)
-  } 
+  }
 
-	downvoteOne = () => {
+  downvoteOne = () => {
     updateOneIdea(this.props.idea._id, this.state)
-  } 
+  }
 
+
+  // HANDLE UPVOTE 
   handleUpvote = () => {
-    if(!this.state.hasUpvoted && !this.state.hasDownvoted) {
-			this.setState({ 
-        upvotes: this.state.upvotes + 1, 
-        upvotedUsers: [...this.state.upvotedUsers, this.state.loggedUser._id], 
-				hasUpvoted: true,
-    	}, this.upvoteOne);
-    } else if (this.state.hasUpvoted && !this.state.hasDownvoted){
-      this.setState({ 
-        upvotes: this.state.upvotes - 1, 
-        upvotedUsers: this.state.upvotedUsers.filter(id => id !== this.state.loggedUser._id), 
-				hasUpvoted: false,
+    // 1 - check the "hasupvoted" status 
+    //if the user has not already voted at all 
+    if (!this.state.hasUpvoted && !this.state.hasDownvoted) {
+      // 2 - add 1 to th 
+      this.setState({
+        upvotes: this.state.upvotes + 1,
+        upvotedUsers: [...this.state.upvotedUsers, this.state.loggedUser._id],
+        hasUpvoted: true,
       }, this.upvoteOne);
-    } else if (!this.state.hasUpvoted && this.state.hasDownvoted){
-      this.setState({ 
-        upvotes: this.state.upvotes + 1, 
-        downvotes: this.state.downvotes - 1, 
-        upvotedUsers: [...this.state.upvotedUsers, this.state.loggedUser._id], 
-				downvotedUsers: this.state.downvotedUsers.filter(id => id !== this.state.loggedUser._id),
-				hasUpvoted: true,
-				hasDownvoted: false,
-    }, this.upvoteOne);
+      //if the user has upvoted and click again an upvote it removes the vote
+    } else if (this.state.hasUpvoted && !this.state.hasDownvoted) {
+      this.setState({
+        upvotes: this.state.upvotes - 1,
+        upvotedUsers: this.state.upvotedUsers.filter(id => id !== this.state.loggedUser._id),
+        hasUpvoted: false,
+      }, this.upvoteOne);
+      //if the user has downvoted and click on upvote
+    } else if (!this.state.hasUpvoted && this.state.hasDownvoted) {
+      this.setState({
+        upvotes: this.state.upvotes + 1,
+        downvotes: this.state.downvotes - 1,
+        upvotedUsers: [...this.state.upvotedUsers, this.state.loggedUser._id],
+        downvotedUsers: this.state.downvotedUsers.filter(id => id !== this.state.loggedUser._id),
+        hasUpvoted: true,
+        hasDownvoted: false,
+      }, this.upvoteOne);
     }
   };
 
   handleDownvote = () => {
-    if(!this.state.hasDownvoted && !this.state.hasUpvoted) {
-      this.setState({ 
-        downvotes: this.state.downvotes + 1, 
-        downvotedUsers: [...this.state.downvotedUsers, 
-				this.state.loggedUser._id],
-				hasDownvoted: true,
-    }, this.downvoteOne);
+    if (!this.state.hasDownvoted && !this.state.hasUpvoted) {
+      this.setState({
+        downvotes: this.state.downvotes + 1,
+        downvotedUsers: [...this.state.downvotedUsers,
+        this.state.loggedUser._id],
+        hasDownvoted: true,
+      }, this.downvoteOne);
     } else if (this.state.hasDownvoted && !this.state.hasUpvoted) {
-      this.setState({ 
-        downvotes: this.state.downvotes - 1, 
+      this.setState({
+        downvotes: this.state.downvotes - 1,
         downvotedUsers: this.state.downvotedUsers.filter(id => id !== this.state.loggedUser._id),
-				hasDownvoted: false
+        hasDownvoted: false
       }, this.downvoteOne);
     } else if (!this.state.hasDownvoted && this.state.hasUpvoted) {
-      this.setState({ 
-        downvotes: this.state.downvotes + 1, 
+      this.setState({
+        downvotes: this.state.downvotes + 1,
         upvotes: this.state.upvotes - 1,
         downvotedUsers: [...this.state.downvotedUsers, this.state.loggedUser._id],
         upvotedUsers: this.state.upvotedUsers.filter(id => id !== this.state.loggedUser._id),
-				hasDownvoted: true,
-				hasUpvoted: false,
-    }, this.downvoteOne);
+        hasDownvoted: true,
+        hasUpvoted: false,
+      }, this.downvoteOne);
     }
   };
 
-  suggestLogin = () => {
-    this.setState({showModal: true})
-    console.log("modal clicked")
-  }
+  // suggestLogin = () => {
+  //   this.setState({showModal: true})
+  //   console.log("modal clicked")
+  // }
 
-  handleCloseModal = (e) => this.setState({showModal: false})
-    // console.log("e.target.classList: ", e.target.classList)
-    // (e.target.classList[0] === "modal" || e.target.classList[0] === "button" )? this.setState({showModal: false}) : 
-    // null
-  
+  // handleCloseModal = (e) => {
+  //   console.log("clicked")
+  //   this.setState({showModal: false})
+  //   console.log(this.state)
+  // }
 
-  render(){
+  // console.log("e.target.classList: ", e.target.classList)
+  // (e.target.classList[0] === "modal" || e.target.classList[0] === "button" )? this.setState({showModal: false}) : 
+  // null
+
+
+  render() {
     return (
       <div className={`upvDownvWrapper ${this.props.orientation}`}>
-        <div className={`upvDownvComponent ${this.props.orientation} ${this.state.hasUpvoted ? "active" : ""}`} onClick={this.state.loggedUser ? this.handleUpvote : this.suggestLogin}>
+        <div className={`upvDownvComponent ${this.props.orientation} ${this.state.hasUpvoted ? "active" : ""}`} onClick={this.handleUpvote}>
           <FontAwesomeIcon icon="heart" className="upvoteIcon" />
           <p className={`upvoteCount ${this.props.orientation}`}>{this.state.upvotes}</p>
         </div>
-        <div className={`upvDownvComponent ${this.props.orientation} ${this.state.hasDownvoted ? "active" : ""}`} onClick={this.state.loggedUser ? this.handleDownvote : this.suggestLogin}>
+        <div className={`upvDownvComponent ${this.props.orientation} ${this.state.hasDownvoted ? "active" : ""}`} onClick={this.handleDownvote}>
           <FontAwesomeIcon icon="poo" className="upvoteIcon" />
           <p className={`downvoteCount ${this.props.orientation}`}>{this.state.downvotes}</p>
         </div>
         {this.state.showModal ? (
-        <Signup onClose={this.handleCloseModal} />
-      ) : null}
-    </div>
+          <Signup toto="true" onClose={this.handleCloseModal} />
+        ) : null}
+      </div>
     )
   }
 }
 
-        /* <Modal onClose={this.handleCloseModal}>
-          This is the secret modal message!
-        </Modal> */
+/* <Modal onClose={this.handleCloseModal}>
+  This is the secret modal message!
+</Modal> */
 
 export default UpvoteDownvote;
 

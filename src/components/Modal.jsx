@@ -14,7 +14,7 @@ class Modal extends Component {
 	div = document.createElement("div")
 	componentDidMount() {
 		modalRoot.appendChild(this.div)
-		console.log("modal rendered")
+		// console.log("modal rendered")
 	} 
 
 	componentWillUnmount() {

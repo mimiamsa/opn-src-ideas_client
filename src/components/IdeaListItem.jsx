@@ -2,7 +2,7 @@ import React, {Component} from "react"
 import DraftEdit from "./DraftEdit"
 import { Link } from "react-router-dom";
 import UpvoteTest from "../components/UpvoteTest"
-import SharedOptions from "../components/myIdeaOptions"
+// import SharedOptions from "../components/myIdeaOptions"
 import Moment from 'react-moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import OnVisible from 'react-on-visible';
@@ -49,9 +49,9 @@ class ideaItem extends Component {
             <div className="publicItemInfosPrimary">
               <p className="publicItemCat">CATEGORY / <span className="publicItemCatName">{this.props.category}</span></p>
               <Link to={`/idea/${this.props._id}`}>
-                <h2 className="publicItemTitle">{this.props.title.length > 35 ? this.props.title.slice(0,35)+"[...]" : this.props.title}</h2>
+                <h2 className="publicItemTitle">{this.props.title.length > 35 ? this.props.title.slice(0,35)+"..." : this.props.title}</h2>
               </Link>
-              <div className="publicItemDescription">{this.props.description.length > 75 ? this.props.description.slice(0,75)+" [...]" : this.props.description }</div>
+              <div className="publicItemDescription">{this.props.description.length > 75 ? this.props.description.slice(0,75)+"..." : this.props.description }</div>
             </div>
             
             <div className="publicItemInfosSecondary">
@@ -68,7 +68,7 @@ class ideaItem extends Component {
           </div>
 
           <div className="publicItemUpvote">
-            <UpvoteTest idea={idea} loggedUser={this.props.loggedUser} />
+            <UpvoteTest idea={idea} />
           </div>
         </OnVisible>}
       </React.Fragment>

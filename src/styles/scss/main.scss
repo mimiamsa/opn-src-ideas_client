@@ -15,11 +15,14 @@
 @import './ideapage';
 @import './createIdea';
 @import './ideaItem';
+@import './modal-forms';
+
 // @import './editProfile.scss';
 
 .App {
   text-align: center;
   font-family: 'Plain';
+  position: relative;
 }
 
 .App-header {

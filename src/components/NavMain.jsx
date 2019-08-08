@@ -1,24 +1,34 @@
 import React, { Component } from 'react';
 import { NavLink } from "react-router-dom";
-import AuthService from '../api/auth-service';
+// import AuthService from '../api/auth-service';
+import SignUp from '../pages/modals/SignUpModal';
+import SignIn from '../pages/modals/SignInModal';
+import { AuthConsumer } from "./../auth/Guard";
+import { withRouter } from "react-router-dom"
 
 class NavMain extends Component {
-  constructor(props){
-    super(props);
-    this.service = new AuthService();
-    console.log("nav main props", props)
+  state = {
+    showModalSignUp: false,
+    showModalSignIn: false,
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.loggedUser !== prevProps.loggedUser) {
-      this.setState({
-        loggedIn : true,
-        loggedUser : this.props.loggedUser
+  activeBurger = (e, clbksignout) => {
+    this.activeAnimation()
+    if (e.target.className === "navLinkExpanded signup-link" || e.target.className === "navLinkExpanded create-link") {
+      this.setState({ showModalSignUp: true })
+    }
+    if (e.target.className === "navLinkExpanded signin-link") {
+      this.setState({ showModalSignIn: true })
+    }
+    if (e.target.className === "navLinkExpanded signout-link") {
+      clbksignout((res) => {
+        console.log("the user status is", res)
+        this.props.history.push("/")
       })
     }
   }
 
-  activeBurger = () => {
+  activeAnimation = () => {
     var bar1, bar2, bar3, expandingNav, mainNav;
     bar1 = document.querySelector(".bar1");
     bar3 = document.querySelector(".bar3");
@@ -46,42 +56,56 @@ class NavMain extends Component {
     mainNav.classList.remove("noBorderBottom");
   }
 
-  logoutUser = () =>{
-    this.activeBurger();
-    this.service.logout()
-    .then(() => {
-      // this.setState({ loggedInUser: null });
-      this.props.getUser(null);  
-    }, this.props.history.push(`/`))
+  closeModal = () => {
+    this.setState({ showModalSignUp: false, showModalSignIn: false })
   }
 
-  render(){
+  render() {
+    const { showModalSignUp, showModalSignIn } = this.state
     return (
       <React.Fragment>
-      <nav className="mainNav">
-        <NavLink className="navLogo" onClick={this.closeBurger} activeClassName="is-active" to="/" exact>Op<span className="logoText">e</span>nS<span className="logoText">o</span><span className="logoText">u</span>rc<span className="logoText">e</span>&mdash;IDEAS</NavLink>
-        <div id="container" className="burgerMenu" onClick={this.activeBurger}>
-          <div className="burgerItem bar1"></div>
-          <div className="burgerItem bar2"></div>
-          <div className="burgerItem bar3"></div>
-        </div>
-      </nav>
-      <div className="expandingNav">
-          {!this.props.loggedIn && <NavLink className="navLinkExpanded" onClick={this.activeBurger} activeClassName="is-active" 
-            to="/signup" exact>
-            Signup</NavLink>}
 
-          {!this.props.loggedIn && <NavLink className="navLinkExpanded" onClick={this.activeBurger} activeClassName="is-active" to="/signup" exact>Login</NavLink>}
-          <NavLink className="navLinkExpanded" onClick={this.activeBurger} to="/create-idea" >Share an Idea</NavLink>
-          {this.props.loggedIn && <NavLink className="navLinkExpanded" onClick={this.activeBurger} activeClassName="is-active" to={`/@${this.props.loggedUser.name}`} exact>Profile</NavLink>}
-          {this.props.loggedIn && <NavLink className="navLinkExpanded" onClick={this.logoutUser} activeClassName="is-active" to={{
-            pathname : "/",
-            logout : true,}} 
-            exact>Logout</NavLink>}
-      </div>
+        {showModalSignUp ? <SignUp closeModal={this.closeModal} /> : showModalSignIn ? <SignIn history={this.props.history} closeModal={this.closeModal} /> : ""}
+
+        <nav className="mainNav">
+          <NavLink className="navLogo" onClick={this.closeBurger} activeClassName="is-active" to="/" exact>Op
+          <span className="logoText">e</span>nS<span className="logoText">o</span><span className="logoText">u</span>rc<span className="logoText">e</span>&mdash;IDEAS
+          </NavLink>
+          <div id="container" className="burgerMenu" onClick={this.activeBurger}>
+            <div className="burgerItem bar1"></div>
+            <div className="burgerItem bar2"></div>
+            <div className="burgerItem bar3"></div>
+          </div>
+        </nav>
+        <AuthConsumer>
+          {({ signout, loginStatus, user }) =>
+
+            <div className="expandingNav">
+
+              <>
+                {loginStatus && user ? (
+                  <>
+                    <NavLink className="navLinkExpanded" onClick={this.activeBurger} to={`/user/${user.firstname}-${user.lastname}`}>My profile</NavLink>
+                    <div className="navLinkExpanded signout-link" onClick={(e) => this.activeBurger(e, signout)} >Sign out</div>
+                    <NavLink className="navLinkExpanded" onClick={this.activeBurger} to="/create-idea">Share an idea</NavLink>
+                  </>
+                ) :
+                  <>
+                    <div className="navLinkExpanded signup-link" onClick={this.activeBurger}>Sign up</div>
+                    <div className="navLinkExpanded signin-link" onClick={this.activeBurger} >Sign in</div>
+                    <div className="navLinkExpanded create-link" onClick={this.activeBurger}>Share an idea</div>
+                  </>
+                }
+
+              </>
+
+
+            </div>
+          }
+        </AuthConsumer>
       </React.Fragment>
     )
   }
 }
 
-export default NavMain
+export default withRouter(NavMain)

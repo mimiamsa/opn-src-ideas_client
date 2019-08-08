@@ -16,20 +16,21 @@ class FormCreateIdea extends Component {
       category: "",
       createdIdeaId: checkId || "",
       tags: [],
-      creator_name: props.loggedUser ? props.loggedUser.name : "",
-      creator: props.loggedUser ? props.loggedUser._id : "",
+      // creator_name: props.loggedUser ? props.loggedUser.name : "",
+      // creator: props.loggedUser ? props.loggedUser._id : "",
       upvotes: 1,
-      upvotedUsers: props.loggedUser ? [props.loggedUser._id] : "",
+      // upvotedUsers: props.loggedUser ? [props.loggedUser._id] : "",
       existingIdea: false,
       submit: false,
-      passUser: null,
+      // passUser: null,
     }
-    console.log("form idea props: ", props)
+    // console.log("form idea props: ", props)
   }
 
   componentDidMount() {
-    !this.state.createdIdeaId ? console.log("") : 
-    (getOneIdea(this.state.createdIdeaId)
+    console.log(this.state)
+    !this.state.createdIdeaId ? console.log("") :
+      (getOneIdea(this.state.createdIdeaId)
         .then(res => {
           console.log(res.data)
           this.setState({
@@ -47,11 +48,16 @@ class FormCreateIdea extends Component {
   }
 
   handleInput = (evt) => {
+
     this.setState({
-      [evt.target.name]: evt.target.value,
-    }, this.props.updatePreview({
-      [evt.target.name]: evt.target.value,
-    }))
+        [evt.target.name]: evt.target.value,
+      })
+console.log({...this.state})
+    // this.setState({
+    //   [evt.target.name]: evt.target.value,
+    // }, this.props.updatePreview({
+    //   [evt.target.name]: evt.target.value,
+    // }))
   }
 
   handleTags = (tags) => {
@@ -66,32 +72,39 @@ class FormCreateIdea extends Component {
     evt.preventDefault();
 
     // if its a new idea --> create; if it's an existing --> update
-    this.state.existingIdea ? 
-    updateOneIdea(this.state.createdIdeaId, {...this.state, isPublic: false})
-    .then(res => {
-        // console.log("successfully updated, here is the result: ", res)
-        this.setState({
-          redirect: true,
-          createdIdeaId: this.state.createdIdeaId
-        })
-      })
-      .catch(err => {
-        console.log("error creating on save update", err.response);
-      }) 
-    : 
-    createOneIdea({...this.state, isPublic: false})
-    .then(res => {
-        this.props.sendToParent();
-        console.log("create one idea save, response: ", res)
 
-        this.setState({
-          redirect: true,
-          createdIdeaId: this.state.createdIdeaId
+    if (this.state.existingIdea) {
+      console.log("update")
+      updateOneIdea(this.state.createdIdeaId, { ...this.state, isPublic: false })
+        .then(res => {
+          // console.log("successfully updated, here is the result: ", res)
+          this.setState({
+            redirect: true,
+            createdIdeaId: this.state.createdIdeaId
+          })
         })
-      })
-      .catch(err => {
-        console.log("error creating on save create", err.response);
-      })
+        .catch(err => {
+          console.log("error creating on save update", err.response);
+        })
+    } else {
+      console.log("heyhey")
+      createOneIdea({ ...this.state, isPublic: false })
+        .then(res => {
+          this.props.sendToParent();
+          console.log("create one idea save, response: ", res)
+
+          this.setState({
+            redirect: true,
+            createdIdeaId: this.state.createdIdeaId
+          })
+        })
+        .catch(err => {
+          console.log("error creating on save create", err.response);
+        })
+    }
+
+
+
   }
 
   handleSubmit = (evt) => {
@@ -100,38 +113,41 @@ class FormCreateIdea extends Component {
     // if (!title || !description || !category || !tags.length) {
     //   return console.log("nope")
     // }
-    this.state.existingIdea ? 
-    updateOneIdea(this.state.createdIdeaId, {...this.state, isPublic: true})
-    .then(res => {
-        console.log("successfully updated, here is the result: ", res)
-        this.setState({
-          redirect: true,
-          createdIdeaId: this.state.createdIdeaId,
-          submit: true,
+    this.state.existingIdea ?
+      updateOneIdea(this.state.createdIdeaId, { ...this.state, isPublic: true })
+        .then(res => {
+          console.log("successfully updated, here is the result: ", res)
+          this.setState({
+            redirect: true,
+            createdIdeaId: this.state.createdIdeaId,
+            submit: true,
+          })
         })
-      })
-      .catch(err => {
-        console.log("error creating on save update", err.response);
-      }) 
-    :
-    createOneIdea({...this.state, isPublic: true})
-      .then(res => {
-        this.setState({
-          redirect: true,
-          createdIdeaId: res.data.dbSuccess._id,
-          submit: true,
+        .catch(err => {
+          console.log("error creating on save update", err.response);
         })
-      })
-      .catch(err => {
-        console.log("ici", err.response);
-      })
+      :
+      createOneIdea({ ...this.state, isPublic: true })
+        .then(res => {
+          this.setState({
+            redirect: true,
+            createdIdeaId: res.data.dbSuccess._id,
+            submit: true,
+          })
+        })
+        .catch(err => {
+          console.log("ici", err.response);
+        })
   }
 
   render() {
-    if (this.state.redirect && this.state.submit) {return <Redirect to={`/idea/${this.state.createdIdeaId}`} />}
-    else if (this.state.redirect && !this.state.submit) {return <Redirect to={{
-      pathname : `/@${this.state.creator_name}`,
-      loggedUser : {name: "THEATEALTJSTLKJWERJWEIRAER"}}} />}
+    if (this.state.redirect && this.state.submit) { return <Redirect to={`/idea/${this.state.createdIdeaId}`} /> }
+    else if (this.state.redirect && !this.state.submit) {
+      return <Redirect to={{
+        pathname: `/@${this.state.creator_name}`,
+        loggedUser: { name: "THEATEALTJSTLKJWERJWEIRAER" }
+      }} />
+    }
 
     return (
       <form id="idea-form" className="form" >
@@ -146,7 +162,7 @@ class FormCreateIdea extends Component {
             onChange={this.handleInput}
           />
         </div>
-        
+
         <div className="inputGroup">
           <label className="formLabel" htmlFor="idea-title">Description - required</label>
           <textarea
@@ -158,7 +174,7 @@ class FormCreateIdea extends Component {
             onChange={this.handleInput}
           />
         </div>
-        
+
         <div className="inputGroup">
           <label className="formLabel">Topic</label>
           <AddCategories sendCatToParent={this.handleInput} category={this.state.category} {...this.props} />

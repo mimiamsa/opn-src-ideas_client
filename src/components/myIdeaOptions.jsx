@@ -47,7 +47,7 @@ class ideaOptions extends Component {
       var result = window.confirm("Are you sure you want to archive? You will still be able to access this idea, but it will be removed from your profile");
       result === true ? this.archiveSubmit(e) : console.log("canceled archive")
     } else if (e.target.value === "delete") {
-      var result = window.confirm("Are you sure you want to delete? You will not be able to access this idea, and it will be removed from your profile");
+      result = window.confirm("Are you sure you want to delete? You will not be able to access this idea, and it will be removed from your profile");
       result === true ? this.deleteSubmit(e) : console.log("canceled delete")
       // reset dropdown if cancel
     }

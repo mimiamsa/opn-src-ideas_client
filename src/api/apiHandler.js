@@ -5,6 +5,8 @@ const APIURL = process.env.REACT_APP_BACKEND_URL +"/api";
 
 export const getOneUser = id => axios.get(`${APIURL}/user/${id}`);
 
+export const createUser = infos => axios.post(`${APIURL}/user/signup`, infos)
+
 export const getUserByName = name => axios.get(`${APIURL}/user/name/${name}`);
 
 export const updateOneUser = (id, infos) => axios.put(`${APIURL}/user/${id}`, infos);
@@ -47,5 +49,6 @@ export default {
   updateOneUser,
   getOneUser,
   getAllComments,
-  updateAvatar 
+  updateAvatar,
+  createUser
 }

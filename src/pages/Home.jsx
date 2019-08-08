@@ -4,8 +4,8 @@ import Search from "../components/SearchBar"
 import IdeaItem from "../components/IdeaListItem"
 import { getAllIdeas } from "../api/apiHandler";
 import FilterSort from "../components/SortFilter";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {Link} from "react-router-dom";
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import {Link} from "react-router-dom";
 
 class Home extends Component {
   constructor(props) {
@@ -13,20 +13,21 @@ class Home extends Component {
     this.state = {
       allIdeas : [],
       filteredIdeas: [],
-      topIdeas: [],
-      logout: false,
+      // topIdeas: [],
+      // logout: false,
       showModal : false,
     }
   }
   
   loadIdeas() {
     const queryString = window.location.search;
+    
     getAllIdeas(queryString || "")
       .then(res => {
         this.setState({ 
           allIdeas: res.data.ideas,
           filteredIdeas: res.data.ideas,
-          topIdeas: res.data.ideas 
+          // topIdeas: res.data.ideas 
         });
         // console.log("get ideas res: ", res)
       })
@@ -98,7 +99,7 @@ class Home extends Component {
   
   // RENDER
   render() {
-    const { topIdeas } = this.state;
+    // const { topIdeas } = this.state;
     return (
     <div id="home-container">
       <div className="titleContainer">
@@ -111,9 +112,8 @@ class Home extends Component {
           <FontAwesomeIcon icon="trophy" className="trendingTitleIcon"/>
           <h2 className="trendingIdeasTitle">Trending Ideas</h2>
         </div> */}
-        <div className="trendingItemWrapper">
+        {/* <div className="trendingItemWrapper">
           <div className="trendingItem">
-            {/* <p className="trendingItemUpvotes">{this.state.allIdeas[1] && this.state.allIdeas[1].upvotedUsers.length} upvotes</p> */}
             <FontAwesomeIcon icon="trophy" className="trendingTitleIcon"/>
             <h3 className="trendingItemTitle">
               <Link to={`/idea/${topIdeas[1] && topIdeas[1]._id}`}>{topIdeas[1] && topIdeas[1].title}</Link>
@@ -121,7 +121,6 @@ class Home extends Component {
             <p className="trendingItemCreator">{topIdeas[1] && topIdeas[1].creator.name}</p>
           </div>
           <div className="trendingItem">
-            {/* <p className="trendingItemUpvotes">{this.state.allIdeas[0] && this.state.allIdeas[0].upvotedUsers.length} upvotes</p> */}
             <FontAwesomeIcon icon="trophy" className="trendingTitleIcon"/>
             <h3 className="trendingItemTitle">
               <Link to={`/idea/${topIdeas[0] && topIdeas[0]._id}`}>{topIdeas[0] && topIdeas[0].title}</Link>
@@ -129,21 +128,20 @@ class Home extends Component {
             <p className="trendingItemCreator">{topIdeas[0] && topIdeas[0].creator.name}</p>
           </div>
           <div className="trendingItem">
-            {/* <p className="trendingItemUpvotes">{this.state.allIdeas[2] && this.state.allIdeas[2].upvotedUsers.length} upvotes</p> */}
             <FontAwesomeIcon icon="trophy" className="trendingTitleIcon"/>
             <h3 className="trendingItemTitle">
               <Link to={`/idea/${topIdeas[2] && topIdeas[2]._id}`}>{topIdeas[2] && topIdeas[2].title}</Link>
             </h3>
             <p className="trendingItemCreator">{topIdeas[2] && topIdeas[2].creator.name}</p>
           </div>
-        </div>
+        </div> */}
       </div>
       <FilterSort updateSort={(sort) => this.updateSort(sort)} />
       <div className="ideaListContainer home">
           {
             this.state.filteredIdeas.map( (idea, index) => (
               (idea.isPublic && !idea.isArchived) &&
-              <IdeaItem key={index} loggedUser={this.props.loggedUser} {...idea} isMine={false} />
+              <IdeaItem key={index} {...idea} isMine={false} />
             ))
           }
       </div>
