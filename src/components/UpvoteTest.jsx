@@ -29,6 +29,7 @@ class UpvoteDownvote extends Component {
         downvotes: this.props.idea.downvotes,
         upvotedUsers: this.props.idea.upvotedUsers,
         downvotedUsers: this.props.idea.downvotedUsers,
+      
         hasUpvoted: (this.props.loggedUser && this.checkIfAlreadyUpvoted(this.props.loggedUser._id, this.props.idea)),
         hasDownvoted: (this.props.loggedUser && this.checkIfAlreadyDownvoted(this.props.loggedUser._id, this.props.idea))
       })
@@ -42,6 +43,8 @@ class UpvoteDownvote extends Component {
     });
   }
 
+
+  //check inside the idea upvotedUsers array if the id of the current user exists 
   checkIfAlreadyUpvoted = (userId, idea) => {
     var upvotedUsers = idea.upvotedUsers
     if (!upvotedUsers) return false
