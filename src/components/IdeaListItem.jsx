@@ -1,4 +1,4 @@
-import React, {Component} from "react"
+import React, { Component } from "react"
 import DraftEdit from "./DraftEdit"
 import { Link } from "react-router-dom";
 import UpvoteTest from "../components/UpvoteTest"
@@ -6,12 +6,13 @@ import UpvoteTest from "../components/UpvoteTest"
 import Moment from 'react-moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import OnVisible from 'react-on-visible';
+import { AuthConsumer } from './../auth/Guard'
 
 // accepts props:
 // {...idea} --> directly reference any keys on "idea"
 // loggedUser  --> a user object that represents the *current* logged-in user
 // isMine      --> Boolean; if true && !props.isPublic --> show draft/edit
-            // else --> show upvote/downvote
+// else --> show upvote/downvote
 
 // .isPublic is boolean true === "published", false === "draft"
 // if status === false:   --> displays DraftEdit component
@@ -31,46 +32,50 @@ class ideaItem extends Component {
   sendToParent = (e) => {
     this.props.onDelete(e)
   }
-  
+
   render() {
-    var idea = {...this.props}
+    var idea = { ...this.props }
     return (
       <React.Fragment>
         {/* MY DRAFTS */}
-        {!this.props.isPublic ? 
-        <div className="draftItem">
-          <Link className="listDraftLink" to={`/create-idea/${this.props._id}`}>{this.props.title}</Link>
-          <div className="listIdeaDescription">{this.props.description}</div>
-          <DraftEdit id={this.props._id} creator_name={this.props.creator && this.props.creator.name} sendToParent={(e) => this.sendToParent(e)} /> 
-        </div>
-        : 
-        <OnVisible className="publicItem" percent={5}>
-          <div className="publicItemInfos">
-            <div className="publicItemInfosPrimary">
-              <p className="publicItemCat">CATEGORY / <span className="publicItemCatName">{this.props.category}</span></p>
-              <Link to={`/idea/${this.props._id}`}>
-                <h2 className="publicItemTitle">{this.props.title.length > 35 ? this.props.title.slice(0,35)+"..." : this.props.title}</h2>
-              </Link>
-              <div className="publicItemDescription">{this.props.description.length > 75 ? this.props.description.slice(0,75)+"..." : this.props.description }</div>
-            </div>
-            
-            <div className="publicItemInfosSecondary">
-              <div>
-                <p className="publicItemCreator"><Link className="listPublicLink" to={`/@${this.props.creator && this.props.creator.name}`}>{this.props.creator && this.props.creator.name}</Link></p>
-              </div>
-              <div className="publicItemInfosSecondaryRight">
-                <FontAwesomeIcon icon="comment" className="publicItemCommentIcon"/>
-                <p className="publicItemCommentsCount">{this.props.comments.length}</p>
-                <Moment className="publicItemDate" fromNow>{this.props.created_at}</Moment>
-              </div>
-            </div>
-            {/* {!this.props.creator._id && <SharedOptions id={this.props._id} sendToParent={(e) => this.sendToParent(e)}/>} */}
+        {!this.props.isPublic ?
+          <div className="draftItem">
+            <Link className="listDraftLink" to={`/create-idea/${this.props._id}`}>{this.props.title}</Link>
+            <div className="listIdeaDescription">{this.props.description}</div>
+            <DraftEdit id={this.props._id} creator_name={this.props.creator && this.props.creator.name} sendToParent={(e) => this.sendToParent(e)} />
           </div>
+          :
+          <OnVisible className="publicItem" percent={5}>
+            <div className="publicItemInfos">
+              <div className="publicItemInfosPrimary">
+                <p className="publicItemCat">CATEGORY / <span className="publicItemCatName">{this.props.category}</span></p>
+                <Link to={`/idea/${this.props._id}`}>
+                  <h2 className="publicItemTitle">{this.props.title.length > 35 ? this.props.title.slice(0, 35) + "..." : this.props.title}</h2>
+                </Link>
+                <div className="publicItemDescription">{this.props.description.length > 75 ? this.props.description.slice(0, 75) + "..." : this.props.description}</div>
+              </div>
 
-          <div className="publicItemUpvote">
-            <UpvoteTest idea={idea} />
-          </div>
-        </OnVisible>}
+              <div className="publicItemInfosSecondary">
+                <div>
+                  <p className="publicItemCreator"><Link className="listPublicLink" to={`/@${this.props.creator && this.props.creator.name}`}>{this.props.creator && this.props.creator.name}</Link></p>
+                </div>
+                <div className="publicItemInfosSecondaryRight">
+                  <FontAwesomeIcon icon="comment" className="publicItemCommentIcon" />
+                  <p className="publicItemCommentsCount">{this.props.comments.length}</p>
+                  <Moment className="publicItemDate" fromNow>{this.props.created_at}</Moment>
+                </div>
+              </div>
+              {/* {!this.props.creator._id && <SharedOptions id={this.props._id} sendToParent={(e) => this.sendToParent(e)}/>} */}
+            </div>
+
+            <div className="publicItemUpvote">
+              <AuthConsumer>
+                {({ user }) => (
+                  <UpvoteTest idea={idea} user={user} />
+                )}
+              </AuthConsumer>
+            </div>
+          </OnVisible>}
       </React.Fragment>
     )
   }

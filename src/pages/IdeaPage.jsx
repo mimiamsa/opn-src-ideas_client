@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { getOneIdea } from "../api/apiHandler";
 import Moment from 'react-moment';
 import { Link } from "react-router-dom";
-import Comments from "./../components/Comments"
-import UpvoteTest from "../components/UpvoteTest"
+import Comments from "./../components/Comments";
+import UpvoteTest from "../components/UpvoteTest";
+import { AuthConsumer } from "./../auth/Guard"
 
 class IdeaPage extends Component {
   constructor(props) {
@@ -22,6 +23,10 @@ class IdeaPage extends Component {
     })
   }
 
+  // componentDidMount(){
+  //   console.log("prout")
+  // }
+
   render() {
     const { idea } = this.state;
     console.log("state: ", this.state)
@@ -32,7 +37,7 @@ class IdeaPage extends Component {
           <h1 className="ideaMainTitle">{idea.title}</h1>
           <div className="ideaCreatorInfos">
             <p className="ideaPageCreator">{idea.creator && idea.creator.name}</p>
-            <Moment className="ideaPageDate" date={idea.created_at} format="MMMM Do YYYY"/>
+            <Moment className="ideaPageDate" date={idea.created_at} format="MMMM Do YYYY" />
           </div>
         </section>
         <section className="ideaInfos">
@@ -41,14 +46,17 @@ class IdeaPage extends Component {
             <p>{idea.description}</p>
           </div>
           <div className="ideaTags">
-          <h3 className="ideaSecHeading">Tags</h3>
-          <p>{idea.tags && idea.tags.map((tag, index) =>
-            <span className="tagItem" key={index}><Link to={`/search?tags=${tag}`}>{tag}</Link></span>
-          )}</p>
-        </div>
+            <h3 className="ideaSecHeading">Tags</h3>
+            <p>{idea.tags && idea.tags.map((tag, index) =>
+              <span className="tagItem" key={index}><Link to={`/search?tags=${tag}`}>{tag}</Link></span>
+            )}</p>
+          </div>
         </section>
-        
-        <Comments ideaObj={this.state.idea} {...this.props} />
+        <AuthConsumer>
+        {({ user }) => (
+          <Comments ideaObj={this.state.idea} {...this.props} user={user} />
+        )}
+        </AuthConsumer>
       </div>
     );
   }

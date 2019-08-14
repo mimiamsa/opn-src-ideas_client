@@ -11,7 +11,7 @@ class Comments extends Component {
     this.state = {
       content: "",
       idea: props.match.params.id,
-      creator: props.loggedUser ? props.loggedUser._id : "",
+      creator: props.user ? props.user.id : "",
       comments: [],
       commentsDisplay: []
     }
@@ -31,6 +31,8 @@ class Comments extends Component {
   }
 
   componentDidMount() {
+    console.log("props =>>>", this.props)
+    console.log("state =>>>", this.state.creator)
     getOneIdea(this.state.idea)
       .then(res => {
         this.setState({ commentsDisplay: res.data.idea.comments, comments: this.pushIdArray(res.data.idea.comments) })
@@ -55,9 +57,9 @@ class Comments extends Component {
                 commentsDisplay: res.data.idea.comments
               })
             })
-                .catch(err => console.log(err))
-            })
             .catch(err => console.log(err))
+            })
+        .catch(err => console.log(err))
         }
   }
 
@@ -69,7 +71,7 @@ class Comments extends Component {
           {this.state.commentsDisplay.map((com, index) => (
             <div key={index} className="postedComment">
               <div className="itemCreator">
-                <Link className="listPublicLink" to={`/@${com.creator.name}`}>{ com.creator.username}</Link>
+                <Link className="listPublicLink" to={`/user/${com.creator.firstname}`}>{com.creator.firstname} {com.creator.lastname}</Link>
               </div>
               <div className="commentText">{com.content}</div>
               <Moment className="commentDate" fromNow>{com.created_at}</Moment>

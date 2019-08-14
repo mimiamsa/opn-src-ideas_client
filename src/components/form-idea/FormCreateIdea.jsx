@@ -4,6 +4,7 @@ import AddCategories from "./AddCategories";
 import AddTags from "./../form-idea/AddTags"
 import { createOneIdea, updateOneIdea, getOneIdea } from "../../api/apiHandler";
 import { Redirect } from "react-router-dom";
+import { AuthConsumer } from "./../../auth/Guard";
 
 class FormCreateIdea extends Component {
   constructor(props) {
@@ -14,22 +15,24 @@ class FormCreateIdea extends Component {
       description: "",
       redirect: false,
       category: "",
+      //check if the url contains the idea id to define if it's an update or a create
       createdIdeaId: checkId || "",
       tags: [],
-      // creator_name: props.loggedUser ? props.loggedUser.name : "",
-      // creator: props.loggedUser ? props.loggedUser._id : "",
+      user_id: "",
+      creator_name: props.user ? props.user.firstname : "",
+      creator: props.user ? props.user.id : "",
       upvotes: 1,
       // upvotedUsers: props.loggedUser ? [props.loggedUser._id] : "",
       existingIdea: false,
       submit: false,
       // passUser: null,
     }
-    // console.log("form idea props: ", props)
   }
 
   componentDidMount() {
-    console.log(this.state)
-    !this.state.createdIdeaId ? console.log("") :
+    console.log("props", this.props)
+    // if it's for the update it will get the idea
+    !this.state.createdIdeaId ? console.log("this is a whole new idea form") :
       (getOneIdea(this.state.createdIdeaId)
         .then(res => {
           console.log(res.data)
@@ -40,7 +43,6 @@ class FormCreateIdea extends Component {
             tags: res.data.idea.tags,
             existingIdea: true,
           })
-          // console.log(`state tags:`, this.state.tags)
         })
         .catch(err => {
           console.log("ici2", err.response);
@@ -48,11 +50,9 @@ class FormCreateIdea extends Component {
   }
 
   handleInput = (evt) => {
-
     this.setState({
-        [evt.target.name]: evt.target.value,
-      })
-console.log({...this.state})
+      [evt.target.name]: evt.target.value,
+    })
     // this.setState({
     //   [evt.target.name]: evt.target.value,
     // }, this.props.updatePreview({
@@ -61,23 +61,18 @@ console.log({...this.state})
   }
 
   handleTags = (tags) => {
-    // console.log("parent!!!", tags)
     this.setState({
       tags: tags
     })
-    // console.log(this.state)
   }
 
+  //----- SAVE AS DRAFT -----//
   handleSave = (evt) => {
     evt.preventDefault();
-
     // if its a new idea --> create; if it's an existing --> update
-
     if (this.state.existingIdea) {
-      console.log("update")
       updateOneIdea(this.state.createdIdeaId, { ...this.state, isPublic: false })
         .then(res => {
-          // console.log("successfully updated, here is the result: ", res)
           this.setState({
             redirect: true,
             createdIdeaId: this.state.createdIdeaId
@@ -87,12 +82,10 @@ console.log({...this.state})
           console.log("error creating on save update", err.response);
         })
     } else {
-      console.log("heyhey")
+      console.log("create a new one")
       createOneIdea({ ...this.state, isPublic: false })
         .then(res => {
           this.props.sendToParent();
-          console.log("create one idea save, response: ", res)
-
           this.setState({
             redirect: true,
             createdIdeaId: this.state.createdIdeaId
@@ -102,10 +95,9 @@ console.log({...this.state})
           console.log("error creating on save create", err.response);
         })
     }
-
-
-
   }
+
+    //----- Publish directly -----//
 
   handleSubmit = (evt) => {
     evt.preventDefault();
@@ -126,7 +118,7 @@ console.log({...this.state})
         .catch(err => {
           console.log("error creating on save update", err.response);
         })
-      :
+      : 
       createOneIdea({ ...this.state, isPublic: true })
         .then(res => {
           this.setState({
@@ -144,55 +136,58 @@ console.log({...this.state})
     if (this.state.redirect && this.state.submit) { return <Redirect to={`/idea/${this.state.createdIdeaId}`} /> }
     else if (this.state.redirect && !this.state.submit) {
       return <Redirect to={{
-        pathname: `/@${this.state.creator_name}`,
-        loggedUser: { name: "THEATEALTJSTLKJWERJWEIRAER" }
+        pathname: `/user/@${this.state.creator_name}`,
       }} />
     }
 
     return (
-      <form id="idea-form" className="form" >
-        <div className="inputGroup">
-          <label className="formLabel" htmlFor="idea-title">Title - required</label>
-          <input
-            value={this.state.title}
-            className="textInput"
-            name="title"
-            type="text"
-            placeholder="what will it be/ do/ achieve?"
-            onChange={this.handleInput}
-          />
-        </div>
+      <AuthConsumer>
+        {({ signout, loginStatus, user }) =>
 
-        <div className="inputGroup">
-          <label className="formLabel" htmlFor="idea-title">Description - required</label>
-          <textarea
-            value={this.state.description}
-            className="textInput areaInput"
-            name="description"
-            type="text"
-            placeholder="Tell us more!"
-            onChange={this.handleInput}
-          />
-        </div>
+          <form id="idea-form" className="form" >
+            <div className="inputGroup">
+              <label className="formLabel" htmlFor="idea-title">Title - required</label>
+              <input
+                value={this.state.title}
+                className="textInput"
+                name="title"
+                type="text"
+                placeholder="what will it be/ do/ achieve?"
+                onChange={this.handleInput}
+              />
+            </div>
 
-        <div className="inputGroup">
-          <label className="formLabel">Topic</label>
-          <AddCategories sendCatToParent={this.handleInput} category={this.state.category} {...this.props} />
-        </div>
+            <div className="inputGroup">
+              <label className="formLabel" htmlFor="idea-title">Description - required</label>
+              <textarea
+                value={this.state.description}
+                className="textInput areaInput"
+                name="description"
+                type="text"
+                placeholder="Tell us more!"
+                onChange={this.handleInput}
+              />
+            </div>
 
-        <div className="inputGroup">
-          <label className="formLabel">Tags</label>
-          <AddTags sendDataToParent={this.handleTags} tags={this.state.tags} />
-        </div>
+            <div className="inputGroup">
+              <label className="formLabel">Topic</label>
+              <AddCategories sendCatToParent={this.handleInput} category={this.state.category} {...this.props} />
+            </div>
 
-        <div className="buttonGroup">
-          <Button className="button secondary" button_name="Save draft" onClick={this.handleSave} />
-          <Button className="button primary" button_name="Publish" onClick={this.handleSubmit} />
-        </div>
-      </form>
+            <div className="inputGroup">
+              <label className="formLabel">Tags</label>
+              <AddTags sendDataToParent={this.handleTags} tags={this.state.tags} />
+            </div>
+
+            <div className="buttonGroup">
+              <Button className="button secondary" button_name="Save draft" onClick={this.handleSave} />
+              <Button className="button primary" button_name="Publish" onClick={this.handleSubmit} />
+            </div>
+          </form>
+        }
+      </AuthConsumer>
     )
   }
-
 }
 
 export default FormCreateIdea 

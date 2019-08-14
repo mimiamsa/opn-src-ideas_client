@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './styles/scss/main.scss';
-import { Switch, Route} from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import NavMain from "./components/NavMain";
 // import AuthService from './api/auth-service';
 import Home from "./pages/Home"
@@ -15,11 +15,11 @@ import SearchResults from "./pages/SearchResults"
 // import EditProfile from "./pages/EditProfile"
 // import ProfileArchives from "./pages/ProfileArchives"
 import ProtectedRoute from "./auth/ProtectedRoute";
-
+// import Test from "./components/Test"
 import Page404 from "./pages/Page404"
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faLinkedin, faTwitter, faProductHunt } from '@fortawesome/free-brands-svg-icons'
-import { faPoo, faHeart, faMapMarkerAlt, faSearch, faComment, faTrophy} from '@fortawesome/free-solid-svg-icons'
+import { faPoo, faHeart, faMapMarkerAlt, faSearch, faComment, faTrophy } from '@fortawesome/free-solid-svg-icons'
 // import { classBody } from '@babel/types';
 library.add(faPoo, faHeart, faMapMarkerAlt, faLinkedin, faProductHunt, faTwitter, faSearch, faTrophy, faComment)
 
@@ -73,7 +73,7 @@ class App extends Component {
 
   handleScroll = (e) => {
     var logoText = document.getElementsByClassName("logoText");
-    if (window.scrollY > 300){
+    if (window.scrollY > 300) {
       logoText[0].classList.add("hidden");
       logoText[1].classList.add("hidden");
       logoText[2].classList.add("hidden");
@@ -91,26 +91,36 @@ class App extends Component {
     // this.fetchUser()
     return (
       <div className="App" onScroll={this.handleScroll}>
-      
-      <NavMain {...this.state}/>
+
+        <NavMain {...this.state} />
         <main id="main">
           <Switch>
             <Route exact path="/" render={(props) => <Home {...props} />} />
-            
+
             <Route path="/search" render={(props) => <SearchResults {...props} />} />
 
             <Route exact path="/signup" render={() => <SignUpPage />} />
             <Route exact path="/signin" render={() => <SignInPage />} />
+
+            {/* <Route path="/idea" component={Test} /> */}
             {/* <Route exact path="/create-idea" render={(props) => <CreateIdea {...props} />} /> */}
+            <Route exact path="/user/:fullname" render={(props) => <UserProfile {...props} />} />
+
+
+            <Route path="/idea/:id" render={(props) => <IdeaPage {...props} />} />
+
 
             {/* <Route exact path="/@:name/edit" render={(props) => <EditProfile loggedUser={this.state.loggedUser} {...props} />} />
             <Route exact path="/@:name/archive" render={(props) => <ProfileArchives loggedUser={this.state.loggedUser} {...props} />} /> */}
-            <ProtectedRoute exact path="/create-idea" component={CreateIdea}/>} />
-
-            <Route exact path="/user/:fullname" render={(props) => <UserProfile {...props} />} />
+            {/* <AuthConsumer>
+              {({ user }) => */}
+            <ProtectedRoute exact path="/create-idea" render={(props) => <CreateIdea {...props} />} />
+            }
+            {/* </AuthConsumer> */}
             <Route exact path="/create-idea/:id" render={(props) => <CreateIdea {...props} />} />
-            <Route exact path="/idea/:id" render={(props) => <IdeaPage {...props} />} />
             <Route path="/*" render={() => <Page404 />} />
+
+
           </Switch>
         </main>
       </div>
